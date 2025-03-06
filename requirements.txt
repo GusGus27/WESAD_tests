@@ -1,0 +1,7 @@
+numpy
+pandas
+matplotlib
+scipy
+cupy
+cupy-cuda12x
+neurokit2

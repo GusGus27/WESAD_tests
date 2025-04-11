@@ -1,7 +1,6 @@
-numpy
 pandas
+numpy
 matplotlib
 scipy
-cupy
-cupy-cuda12x
+#cupy
 neurokit2

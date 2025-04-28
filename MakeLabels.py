@@ -3,8 +3,8 @@ import pandas as pd
 from tqdm import tqdm
 import numpy as np
 
-DATA_DIR = r'C:\Users\IALAB\Downloads\WESAD_TEST\Hombres_Experimental'
-OUTPUT_DIR = r'C:\Users\IALAB\Downloads\WESAD_TEST\dataProcessed'
+DATA_DIR = r'FAIR_Data\Mujeres\Experimental'
+OUTPUT_DIR = r'dataProcessed'
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
@@ -25,7 +25,7 @@ for file in tqdm(files, desc="Procesando archivos"):
         chunk_list = []
         first_row = True  # Para controlar la eliminación de la primera fila
 
-        for chunk in pd.read_csv(data_file, index_col=None, header=9, chunksize=50000):
+        for chunk in pd.read_csv(data_file, index_col=None, header=11, chunksize=50000):
             chunk.dropna(axis=1, how='all', inplace=True)  # Eliminar columnas vacías
 
             if first_row:
@@ -40,11 +40,12 @@ for file in tqdm(files, desc="Procesando archivos"):
 
             # Función para asignar etiquetas
             def asignar_label_vectorized(df, conditions):
-                cond1 = (df['time'] >= conditions.iloc[0]['time']) & (df['time'] <= conditions.iloc[2]['time'])
-                cond2 = (df['time'] >= conditions.iloc[5]['time']) & (df['time'] <= conditions.iloc[7]['time'])
-                cond3 = (df['time'] > conditions.iloc[7]['time']) & (df['time'] <= conditions.iloc[8]['time'])
+                cond1 = (df['time'] > conditions.iloc[0]['time']) & (df['time'] <= conditions.iloc[2]['time'])
+                cond2 = (df['time'] > conditions.iloc[3]['time']) & (df['time'] <= conditions.iloc[4]['time'])
+                cond3 = ((df['time'] > conditions.iloc[5]['time']) & (df['time'] <= conditions.iloc[7]['time'])) | ((df['time'] > conditions.iloc[8]['time']) & (df['time'] <= conditions.iloc[9]['time']))
+                cond4 = ((df['time'] > conditions.iloc[7]['time']) & (df['time'] <= conditions.iloc[8]['time']))
 
-                df['label'] = np.select([cond1, cond2, cond3], [1, 2, 3], default=0)
+                df['label'] = np.select([cond1, cond2, cond3, cond4], [1, 2, 3, 4], default=0)
                 return df
 
             chunk = asignar_label_vectorized(chunk, conditions)

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Visualización manual de IBI y HRV</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f0f4f8;
+      text-align: center;
+      padding-top: 50px;
+    }
+
+    .halo {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background-color: rgba(0, 255, 0, 0.2);
+      margin: auto;
+      position: relative;
+      animation: pulse 3s infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .heart {
+      width: 100px;
+      height: 90px;
+      background-color: red;
+      position: relative;
+      transform: rotate(-45deg);
+      animation: beat 1s infinite;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      width: 100px;
+      height: 90px;
+      background-color: red;
+      border-radius: 50%;
+      position: absolute;
+    }
+
+    .heart::before {
+      top: -50px;
+      left: 0;
+    }
+
+    .heart::after {
+      left: 50px;
+      top: 0;
+    }
+
+    @keyframes beat {
+      0%, 100% { transform: scale(1) rotate(-45deg); }
+      50% { transform: scale(1.2) rotate(-45deg); }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    .datos, .formulario {
+      margin-top: 20px;
+      font-size: 1.1rem;
+    }
+
+    .highlight {
+      font-weight: bold;
+      color: #333;
+    }
+
+    input {
+      padding: 5px;
+      margin: 5px;
+      width: 80px;
+    }
+
+    button {
+      padding: 6px 12px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Estado Cardíaco Manual</h1>
+  <div class="halo" id="halo">
+    <div class="heart" id="heart"></div>
+  </div>
+
+  <div class="datos">
+    <p>IBI actual: <span id="ibi" class="highlight">—</span> ms</p>
+    <p>HRV (RMSSD): <span id="hrv" class="highlight">—</span> ms</p>
+  </div>
+
+  <div class="formulario">
+    <input type="number" id="input-ibi" placeholder="IBI (ms)" />
+    <input type="number" id="input-hrv" placeholder="HRV (ms)" />
+    <button onclick="aplicarCambios()">Actualizar</button>
+  </div>
+
+  <script>
+    function actualizarVisual(ibi, hrv) {
+      const heart = document.getElementById("heart");
+      const halo = document.getElementById("halo");
+
+      // Validación básica
+      if (ibi < 300 || ibi > 2000 || hrv < 0 || hrv > 200) {
+        alert("Valores fuera de rango. IBI 300–2000 ms, HRV 0–200 ms.");
+        return;
+      }
+
+      // Velocidad del latido según IBI
+      heart.style.animationDuration = (ibi / 1000).toFixed(2) + "s";
+
+      // Color del halo según HRV
+      if (hrv < 30) {
+        halo.style.backgroundColor = "rgba(255, 0, 0, 0.2)";
+        halo.style.animationDuration = "4s";
+      } else if (hrv < 45) {
+        halo.style.backgroundColor = "rgba(255, 165, 0, 0.2)";
+        halo.style.animationDuration = "3s";
+      } else {
+        halo.style.backgroundColor = "rgba(0, 255, 0, 0.2)";
+        halo.style.animationDuration = "2s";
+      }
+
+      // Mostrar los datos
+      document.getElementById("ibi").textContent = ibi;
+      document.getElementById("hrv").textContent = hrv;
+    }
+
+    function aplicarCambios() {
+      const ibi = parseInt(document.getElementById("input-ibi").value);
+      const hrv = parseInt(document.getElementById("input-hrv").value);
+      if (!isNaN(ibi) && !isNaN(hrv)) {
+        actualizarVisual(ibi, hrv);
+      } else {
+        alert("Por favor, ingresa ambos valores.");
+      }
+    }
+  </script>
+</body>
+</html>

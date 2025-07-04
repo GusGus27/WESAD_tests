@@ -116,17 +116,19 @@
       }
 
       // Velocidad del latido según IBI
-      heart.style.animationDuration = (ibi / 1000).toFixed(2) + "s";
+      const beatDuration = (ibi / 1000).toFixed(2);
+      heart.style.animationDuration = beatDuration + "s";
+      halo.style.animationDuration = beatDuration + "s";
 
       // Color del halo según HRV
       if (hrv < 30) {
-        halo.style.backgroundColor = "rgba(255, 0, 0, 0.2)";
+        halo.style.backgroundColor = "rgba(255, 0, 0, 0.3)";
         halo.style.animationDuration = "4s";
-      } else if (hrv < 45) {
-        halo.style.backgroundColor = "rgba(255, 165, 0, 0.2)";
+      } else if (hrv < 50) {
+        halo.style.backgroundColor = "rgba(255, 165, 0, 0.3)";
         halo.style.animationDuration = "3s";
       } else {
-        halo.style.backgroundColor = "rgba(0, 255, 0, 0.2)";
+        halo.style.backgroundColor = "rgba(0, 255, 0, 0.3)";
         halo.style.animationDuration = "2s";
       }
 
@@ -143,7 +145,7 @@
       } else {
         alert("Por favor, ingresa ambos valores.");
       }
-    }
+    } 
   </script>
 </body>
 </html>
